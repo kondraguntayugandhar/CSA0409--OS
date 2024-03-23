@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
     }
-
     if (bytes_read == -1) {
         perror("Read error");
         close(source_fd);
