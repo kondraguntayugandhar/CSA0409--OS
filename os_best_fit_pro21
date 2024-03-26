@@ -1,0 +1,64 @@
+#include <stdio.h>
+
+#define MAX_PARTITIONS 100
+
+struct Partition {
+    int id;
+    int size;
+    int allocated;
+};
+
+void bestFit(struct Partition partitions[], int num_partitions, int process_size);
+void displayPartitions(struct Partition partitions[], int num_partitions);
+
+int main() {
+    struct Partition partitions[MAX_PARTITIONS];
+    int num_partitions, process_size;
+
+    printf("Enter the number of memory partitions: ");
+    scanf("%d", &num_partitions);
+
+    for (int i = 0; i < num_partitions; i++) {
+        printf("Enter the size of partition %d: ", i + 1);
+        scanf("%d", &partitions[i].size);
+        partitions[i].id = i + 1;
+        partitions[i].allocated = 0;
+    }
+
+    printf("Enter the size of the process: ");
+    scanf("%d", &process_size);
+
+    bestFit(partitions, num_partitions, process_size);
+
+    displayPartitions(partitions, num_partitions);
+
+    return 0;
+}
+
+void bestFit(struct Partition partitions[], int num_partitions, int process_size) {
+    int best_fit_index = -1;
+    int min_available_size = -1;
+
+    for (int i = 0; i < num_partitions; i++) {
+        if (!partitions[i].allocated && partitions[i].size >= process_size) {
+            if (min_available_size == -1 || partitions[i].size < min_available_size) {
+                min_available_size = partitions[i].size;
+                best_fit_index = i;
+            }
+        }
+    }
+
+    if (best_fit_index != -1) {
+        partitions[best_fit_index].allocated = 1;
+        printf("Process of size %d is allocated to partition %d\n", process_size, partitions[best_fit_index].id);
+    } else {
+        printf("No suitable partition found for process of size %d\n", process_size);
+    }
+}
+
+void displayPartitions(struct Partition partitions[], int num_partitions) {
+    printf("\nPartition\tSize\tAllocated\n");
+    for (int i = 0; i < num_partitions; i++) {
+        printf("%d\t\t%d\t%s\n", partitions[i].id, partitions[i].size, partitions[i].allocated ? "Yes" : "No");
+    }
+}
