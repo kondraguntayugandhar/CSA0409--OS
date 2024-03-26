@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+#define MAX_BLOCKS 100
+#define MAX_PROCESSES 100
+
+typedef struct {
+    int id; 
+    int size; 
+    int allocated;
+} Block;
+typedef struct {
+    int id;
+    int size;
+    int block_id; 
+} Process;
+
+int main() {
+    Block blocks[MAX_BLOCKS];
+    Process processes[MAX_PROCESSES];
+    int num_blocks, num_processes;
+    printf("Enter number of memory blocks: ");
+    scanf("%d", &num_blocks);
+
+    printf("Enter details of memory blocks (id, size):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("Block %d: ", i + 1);
+        scanf("%d %d", &blocks[i].id, &blocks[i].size);
+        blocks[i].allocated = 0; 
+    }
+
+    printf("Enter number of processes: ");
+    scanf("%d", &num_processes);
+
+    printf("Enter details of processes (id, size):\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d %d", &processes[i].id, &processes[i].size);
+        processes[i].block_id = -1; 
+    }
+
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_blocks; j++) {
+            if (blocks[j].allocated == 0 && blocks[j].size >= processes[i].size) {
+                blocks[j].allocated = 1;
+                processes[i].block_id = blocks[j].id;
+                break;
+            }
+        }
+    }
+
+    printf("\nMemory Allocation (Process ID : Block ID):\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("%d : %d\n", processes[i].id, processes[i].block_id);
+    }
+
+    return 0;
+}
